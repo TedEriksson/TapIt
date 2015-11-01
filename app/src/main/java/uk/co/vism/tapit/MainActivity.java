@@ -15,6 +15,7 @@ import android.support.wearable.view.BoxInsetLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.lang.annotation.Retention;
@@ -33,7 +34,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     private TextView mScore;
 
     private TextView mHighScore;
-    private Button reset;
+    private ImageButton reset;
 
     Vibrator vibrator;
 
@@ -139,6 +140,13 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         mHighScore.setVisibility(View.VISIBLE);
         reset.setVisibility(View.VISIBLE);
 
+        reset.setEnabled(true);
+        reset.setVisibility(View.VISIBLE);
+        reset.setScaleX(0);
+        reset.setScaleY(0);
+        reset.setRotation(-270);
+        reset.animate().scaleX(1).scaleY(1).rotation(0);
+
         mContainerView.setBackgroundColor(getResources().getColor(R.color.fail));
         if (handler != null) {
             handler.removeCallbacks(checkResult);
@@ -152,7 +160,16 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         currenTime = START_GAP;
 
         mHighScore.setVisibility(View.GONE);
-        reset.setVisibility(View.GONE);
+
+        reset.setEnabled(false);
+        reset.setScaleX(1);
+        reset.setScaleY(1);
+        reset.animate().scaleX(0).scaleY(0).rotation(-270).withEndAction(new Runnable() {
+            @Override
+            public void run() {
+                reset.setVisibility(View.GONE);
+            }
+        });
 
         success = true;
         handler = new Handler();
@@ -176,7 +193,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         mScore = (TextView) findViewById(R.id.score);
 
         mHighScore = (TextView) findViewById(R.id.highscore);
-        reset = (Button) findViewById(R.id.reset);
+        reset = (ImageButton) findViewById(R.id.reset);
 
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
